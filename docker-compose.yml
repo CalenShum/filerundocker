@@ -1,0 +1,36 @@
+version: '2'
+
+services:
+  db:
+    image: mariadb:10.1
+    environment:
+      TZ: 'Asia/Shanghai'
+      MYSQL_ROOT_PASSWORD: filerun
+      MYSQL_USER: filerun
+      MYSQL_PASSWORD: filerun
+      MYSQL_DATABASE: filerun
+    volumes:
+      - /mnt/hgfs/docker/filerun/db:/var/lib/mysql
+
+  web:
+    build: ./docker
+    environment:
+      FR_DB_HOST: db
+      FR_DB_PORT: 3306
+      FR_DB_NAME: filerun
+      FR_DB_USER: filerun
+      FR_DB_PASS: filerun
+      APACHE_RUN_USER: www-data
+      APACHE_RUN_USER_ID: 33
+      APACHE_RUN_GROUP: www-data
+      APACHE_RUN_GROUP_ID: 33
+    depends_on:
+      - db
+    links:
+      - db:db
+    ports:
+      - "8080:80"
+      - "6800:6800"
+    volumes:
+      - /mnt/hgfs/docker/filerun/html:/var/www/html
+      - /mnt/hgfs/docker/filerun/user-files:/user-files

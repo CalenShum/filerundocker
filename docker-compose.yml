@@ -10,7 +10,7 @@ services:
       MYSQL_PASSWORD: filerun
       MYSQL_DATABASE: filerun
     volumes:
-      - /mnt/hgfs/docker/filerun/db:/var/lib/mysql
+      - /filerundocker/db:/var/lib/mysql
 
   web:
     build: ./docker
@@ -32,5 +32,5 @@ services:
       - "8080:80"
       - "6800:6800"
     volumes:
-      - /mnt/hgfs/docker/filerun/html:/var/www/html
-      - /mnt/hgfs/docker/filerun/user-files:/user-files
+      - /filerundocker/html:/var/www/html
+      - /filerundocker/user-files:/user-files

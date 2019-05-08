@@ -19,8 +19,6 @@ if [ ! -e /var/www/html/dweb/index.html ];  then
 	cp -r /var/www/html/AriaNg-DailyBuild-master/* /var/www/html/dweb/
 	rm -rf /var/www/html/AriaNg-DailyBuild-master
 
-	# exec /install-aria2-ui.sh
-
 	downloadPath='/user-files/superuser/dl'
 
 	basePath='/var/www/html/dweb/aria2'

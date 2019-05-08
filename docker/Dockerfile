@@ -1,6 +1,5 @@
 FROM php:7.2-apache
 
-# COPY ./sources.list /etc/apt/sources.list
 COPY ./filerun-optimization.ini /usr/local/etc/php/conf.d/
 COPY ./db.sql /filerun.setup.sql
 COPY ./autoconfig.php /
@@ -56,14 +55,14 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
     && chmod +x /import-db.sh \
     && chmod +x /install-aria2-ui.sh \
     && chmod +x /entrypoint.sh \
-    # && curl -o /ioncube_loaders_lin_x86-64.tar.gz -L http://downloads3.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz \
+    && curl -o /ioncube_loaders_lin_x86-64.tar.gz -L http://downloads3.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz \
     && tar xvfz /ioncube_loaders_lin_x86-64.tar.gz \
     && PHP_EXT_DIR=$(php-config --extension-dir) \
     && cp "ioncube/ioncube_loader_lin_7.2.so" $PHP_EXT_DIR \
     && echo "zend_extension=ioncube_loader_lin_7.2.so" >> /usr/local/etc/php/conf.d/00_ioncube_loader_lin_7.2.ini \
     && rm -rf ioncube /ioncube_loaders_lin_x86-64.tar.gz \
-    # && curl -o /filerun.zip -L https://filerun.com/download-latest-php72 \
-    # && curl -o /master.zip -L https://github.com/mayswind/AriaNg-DailyBuild/archive/master.zip \
+    && curl -o /filerun.zip -L https://filerun.com/download-latest-php72 \
+    && curl -o /master.zip -L https://github.com/mayswind/AriaNg-DailyBuild/archive/master.zip \
     && mkdir -p /user-files/superuser/dl \
     && chown -R www-data:www-data /user-files \
     && chmod 777 -R /var/www \
@@ -75,11 +74,13 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
 
 # Enable Apache XSendfile
 RUN { \
-		echo 'XSendFile On'; \
-		echo; \
-		echo 'XSendFilePath /user-files'; \
-	} | tee "/etc/apache2/conf-available/filerun.conf" \
-	&& a2enconf filerun
+        echo 'XSendFile On'; \
+        echo; \
+        echo 'XSendFilePath /user-files'; \
+    } | tee "/etc/apache2/conf-available/filerun.conf" \
+    && a2enconf filerun
+
+WORKDIR /var/www/html
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["apache2-foreground"]
